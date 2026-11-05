@@ -1,0 +1,10 @@
+node_modules
+.next
+postgres
+.git
+.env
+.env.*
+!.env.template
+npm-debug.log*
+Dockerfile
+docker-compose*.yml

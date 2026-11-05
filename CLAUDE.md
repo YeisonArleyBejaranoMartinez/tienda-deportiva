@@ -8,7 +8,8 @@
 
 ## Comandos
 
-- `docker compose up -d` — levanta PostgreSQL (variables `DB_USER`, `DB_NAME`, `DB_PASSWORD` en `.env`)
+- `docker compose up -d db` — levanta solo PostgreSQL (para `npm run dev`); variables en `.env` (ver `.env.template`)
+- `docker compose --profile app up -d --build` — levanta todo: `db` + `migrate` (aplica migraciones) + `app` (Next.js en el puerto 3000)
 - `npx prisma migrate dev --name <nombre>` — crea y aplica una migración tras cambiar `prisma/schema.prisma`
 - `npm run seed` — carga datos de prueba (`prisma/seed.ts`)
 - `npm run dev` — servidor de desarrollo
