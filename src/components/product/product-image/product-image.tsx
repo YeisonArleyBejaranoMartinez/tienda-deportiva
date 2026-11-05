@@ -4,11 +4,15 @@ interface Props{
     alt?: string;
     className?: React.StyleHTMLAttributes<HTMLImageElement>["className"];
     width: number;
-    height: number
+    height: number;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
 }
-export const ProductImage = ({src, alt, className, width, height }: Props) => {
+// Acepta URLs completas (Cloudinary), rutas absolutas ("/imgs/...") o
+// nombres de archivo en /public/products. Sin imagen muestra el placeholder.
+export const ProductImage = ({src, alt, className, width, height, onMouseEnter, onMouseLeave }: Props) => {
   const localSrc = (src)?
-  src.startsWith("http")
+  src.startsWith("http") || src.startsWith("/")
   ? src : `/products/${src}`
   : `/imgs/placeholder.jpg`;
     return (
@@ -18,6 +22,8 @@ export const ProductImage = ({src, alt, className, width, height }: Props) => {
         width={width}
         height={height}
         className={className}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       />
     );
 };

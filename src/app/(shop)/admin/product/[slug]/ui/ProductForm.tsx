@@ -1,9 +1,8 @@
 "use client";
 
 import { Product, TypeGender } from "@/src/interfaces";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { ProductImage  as ProductImageType} from "@/src/interfaces/product.interface";
-import clsx from "clsx";
 import { createUpdateProduct } from "@/src/actions/products/create-update-product";
 import { useRouter } from "next/navigation";
 import { ProductImage } from "@/src/components";
@@ -17,14 +16,14 @@ interface Props {
   }[];
 }
 
-const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+// Tallas sugeridas para agregar con un clic
+const suggestedSizes = ["34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "XS", "S", "M", "L", "XL", "Única"];
 type FormInputs = {
   title: string;
   slug: string;
   description: string;
   price: number;
-  inStock: number;
-  sizes: string[];
+  variants: { size: string; stock: number }[];
   tags: string;
   gender: TypeGender;
   categoryId: string;
@@ -38,20 +37,23 @@ export const ProductForm = ({ product, categories }: Props) => {
      handleSubmit,
      register,
      formState: { isValid },
-     getValues,
-     setValue,
+     control,
      watch
    } = useForm<FormInputs>({
      defaultValues: {
        ...product,
        tags: product.tags?.join(",") ?? "",
-       sizes: product.sizes ?? [],
+       variants: product.variants ?? [],
        images: undefined
      },
    });
-   watch("sizes")
+   const { fields, append, remove } = useFieldArray({ control, name: "variants" });
+   const currentVariants = watch("variants");
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    console.log(data);
+    if (data.variants.length === 0) {
+      alert("Agregue al menos una talla");
+      return;
+    }
     const formData  = new FormData();
     const {images, ...productTosave}= data;
     if(product.id){
@@ -61,8 +63,7 @@ export const ProductForm = ({ product, categories }: Props) => {
     formData.append("slug", productTosave.slug);
     formData.append("description", productTosave.description);
     formData.append("price", productTosave.price.toString());
-    formData.append("inStock", productTosave.inStock.toString());
-    formData.append("sizes", productTosave.sizes.join(","));
+    formData.append("variants", JSON.stringify(productTosave.variants));
     formData.append("tags", productTosave.tags);
     formData.append("categoryId", productTosave.categoryId);
     formData.append("gender", productTosave.gender);
@@ -76,16 +77,14 @@ export const ProductForm = ({ product, categories }: Props) => {
     const {ok, product:updatedProduct} = await  createUpdateProduct(formData);
     if(!ok){
        alert("Producto no se pudo actualizar");
+       return;
     }
     router.replace(`/admin/product/${updatedProduct?.slug}`);
   };
-  const onSizeChanded= (size: string  )=>{
-    const sizes =  new Set( getValues("sizes"));
-    sizes.has(size)? sizes.delete(size): sizes.add(size);
-    setValue("sizes", Array.from(sizes))
-
-
-  }
+  const addSize = (size: string) => {
+    if (currentVariants.some((v) => v.size === size)) return;
+    append({ size, stock: 0 });
+  };
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -121,7 +120,7 @@ export const ProductForm = ({ product, categories }: Props) => {
         </div>
 
         <div className="flex flex-col mb-2">
-          <span>Price</span>
+          <span>Precio (COP)</span>
           <input
             type="number"
             className="p-2 border rounded-md bg-gray-200"
@@ -139,15 +138,15 @@ export const ProductForm = ({ product, categories }: Props) => {
         </div>
 
         <div className="flex flex-col mb-2">
-          <span>Gender</span>
+          <span>Género</span>
           <select
             className="p-2 border rounded-md bg-gray-200"
             {...register("gender", { required: true })}
           >
             <option value="">[Seleccione]</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
-            <option value="kid">Kid</option>
+            <option value="men">Hombre</option>
+            <option value="women">Mujer</option>
+            <option value="kid">Niños</option>
             <option value="unisex">Unisex</option>
           </select>
         </div>
@@ -170,26 +169,56 @@ export const ProductForm = ({ product, categories }: Props) => {
 
       {/* Selector de tallas y fotos */}
       <div className="w-full">
-        {/* As checkboxes */}
+        {/* Tallas con su stock */}
         <div className="flex flex-col">
-          <span>Tallas</span>
-          <div className="flex flex-wrap">
-            {sizes.map((size) => (
-              // bg-blue-500 text-white <--- si está seleccionado
+          <span>Tallas e inventario</span>
+          {fields.length === 0 && (
+            <p className="text-sm text-red-500 mb-2">Agregue al menos una talla.</p>
+          )}
+          {fields.map((field, index) => (
+            <div key={field.id} className="flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                placeholder="Talla"
+                className="p-2 border rounded-md bg-gray-200 w-24"
+                {...register(`variants.${index}.size`, { required: true })}
+              />
+              <input
+                type="number"
+                placeholder="Stock"
+                className="p-2 border rounded-md bg-gray-200 w-24"
+                {...register(`variants.${index}.stock`, { required: true, min: 0, valueAsNumber: true })}
+              />
+              <span className="text-sm">unidades</span>
               <button
                 type="button"
-                onClick={() => onSizeChanded(size)}
-                key={size}
-                className={clsx(
-                  "p-2 border rounded-md mr-2 mb-2 transition-all w-20  text-center",
-                  {
-                    "bg-blue-500 text-white": getValues("sizes").includes(size),
-                  },
-                )}
+                onClick={() => remove(index)}
+                className="text-red-500 underline text-sm"
               >
-                <span>{size}</span>
+                Quitar
               </button>
-            ))}
+            </div>
+          ))}
+          <div className="flex flex-wrap mb-4">
+            {suggestedSizes
+              .filter((size) => !currentVariants.some((v) => v.size === size))
+              .map((size) => (
+                <button
+                  type="button"
+                  onClick={() => addSize(size)}
+                  key={size}
+                  className="p-1 border rounded-md mr-2 mb-2 w-14 text-center text-sm"
+                >
+                  + {size}
+                </button>
+              ))}
+            <button
+              type="button"
+              onClick={() => append({ size: "", stock: 0 })}
+              className="p-1 border rounded-md mr-2 mb-2 px-2 text-sm"
+            >
+              + Otra talla
+            </button>
           </div>
 
           <div className="flex flex-col mb-2">
@@ -225,14 +254,6 @@ export const ProductForm = ({ product, categories }: Props) => {
           </div>
         </div>
         <button className="btn-primary w-full">Guardar</button>
-      </div>
-      <div className="flex flex-col mb-2">
-        <span>Inventario</span>
-        <input
-          type="number"
-          className="p-2 border rounded-md bg-gray-200"
-          {...register("inStock", { required: true, min: 0 })}
-        />
       </div>
     </form>
   );

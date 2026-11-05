@@ -9,19 +9,6 @@
 * 🟢 You can import this file directly.
 */
 
-export const Size = {
-  XS: 'XS',
-  S: 'S',
-  M: 'M',
-  L: 'L',
-  XL: 'XL',
-  XXL: 'XXL',
-  XXXL: 'XXXL'
-} as const
-
-export type Size = (typeof Size)[keyof typeof Size]
-
-
 export const Gender = {
   men: 'men',
   women: 'women',

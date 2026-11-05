@@ -2,9 +2,8 @@ export interface Product {
   id: string;
   description: string;
   images: string[];
-  inStock: number;
   price: number;
-  sizes: Size[];
+  variants: ProductVariant[];
   slug: string;
   tags: string[];
   title: string;
@@ -26,6 +25,10 @@ export interface ProductImage{
   productId: string;
   product?: Product;
 }
-export type Size = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "XXXL";
-export type Type = "shirts" | "pants" | "hoodies" | "hats";
+// Talla libre: "38", "40", "S", "M", "Única", "54mm"...
+export type Size = string;
+export interface ProductVariant {
+  size: Size;
+  stock: number;
+}
 export type TypeGender = "men" | "women" | "kid" | "unisex" | "other";

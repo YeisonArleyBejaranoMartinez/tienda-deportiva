@@ -1,6 +1,6 @@
 import {  Title } from "@/src/components";
 // import { initialData } from "../seed/seed";
-import Image from "next/image";
+import { ProductImage } from "@/src/components";
 import clsx from "clsx";
 import { IoCardOutline } from "react-icons/io5";
 import { getOrderById } from "@/src/actions/order/get-order-by-id";
@@ -52,15 +52,15 @@ export default async function OrderID({ params }: Props) {
                 key={item.product.slug + "-" + item.size}
                 className="flex mb-5"
               >
-                <Image
-                  src={`/products/${item.product.ProductImage[0].url}`}
+                <ProductImage
+                  src={item.product.ProductImage[0]?.url}
                   width={100}
                   height={100}
                   alt={item.product.title}
                 />
                 <div className="">
                   <p className="text-xl">{item.product.title}</p>
-                  <p className="text-xl">${item.price}</p>
+                  <p className="text-xl">{currencyFormat(item.price)}</p>
                   <p>Cantidad: {item.quantity}</p>
                   <p>
                     <strong>Subtotal </strong>

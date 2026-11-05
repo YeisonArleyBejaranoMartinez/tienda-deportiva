@@ -43,7 +43,7 @@ export const ProductSlideShow = ({ images, title, className }: Props) => {
               alt={title}
               width={300}
               height={300}
-              src={images[0]}
+              src={image}
               className="rounded-lg object-fill"
             />
           </SwiperSlide>
@@ -65,7 +65,7 @@ export const ProductSlideShow = ({ images, title, className }: Props) => {
               alt={title}
               width={300}
               height={300}
-              src={images[0]}
+              src={image}
               className="rounded-lg object-fill"
             />
           </SwiperSlide>

@@ -22,16 +22,18 @@
 - `src/app/(shop)/` — páginas de la tienda y del admin (`admin/`)
 - `src/components/`, `src/store/` (Zustand: carrito, dirección, UI), `src/interfaces/`
 
-## Estado actual del modelo (heredado de Teslo)
+## Modelo de productos y stock
 
-- `Product` todavía tiene un solo `inStock` y `sizes Size[]` con tallas de ropa (XS…XXXL).
-- Aún NO existe stock por talla; hay que migrar a un modelo de variantes
-  (p. ej. `ProductVariant { productId, size, stock }`) y adaptar carrito, órdenes y admin.
-- Las tallas de patines/protecciones no son de ropa (ej. 35–45, S/M/L de protecciones):
-  revisar el enum `Size` antes de crear productos nuevos.
+- Cada `Product` tiene `variants: ProductVariant[]` con `size` (texto libre: "38", "M", "Única", "80mm") y `stock` propio.
+- El stock total de un producto es la suma de sus variantes; ya no existe `Product.inStock` ni el enum `Size`.
+- `OrderItem.size` guarda la talla comprada como texto.
+- Las tallas se ordenan con `sortVariants` (`src/app/utils/sortVariants.ts`).
+- La página de producto se cachea; el stock en vivo sale de `/api/stock/[slug]`.
+- Categorías: patines, patinetas, protecciones, repuestos. El seed (`src/seed/seed.ts`) tiene datos de prueba sin imágenes.
 
 ## Convenciones
 
 - Toda la UI y mensajes al usuario en español.
 - No subir `.env` ni secretos.
-- Al descontar stock en una orden, hacerlo dentro de una transacción de Prisma.
+- Al descontar stock en una orden, hacerlo dentro de una transacción de Prisma y solo si `stock >= cantidad` (ver `placeOrder.ts`).
+- Precios en COP: mostrarlos con `currencyFormat`.

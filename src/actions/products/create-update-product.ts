@@ -1,6 +1,6 @@
 "use server";
 import {z}  from "zod";
-import { Gender, Size } from "../../generated/enums";
+import { Gender } from "../../generated/enums";
 import prisma from "@/src/lib/prisma";
 import { Product } from "@/src/generated/client";
 import { revalidatePath } from "next/cache";
@@ -13,9 +13,16 @@ const productShema = z.object({
     slug: z.string().min(3).max(255),
     description: z.string().max(2550),
     price: z.coerce.number().min(0).transform(val=>Number(val.toFixed(2))),
-    inStock: z.coerce.number().min(0).transform(val=>Number(val.toFixed(0))),
     categoryId: z.string().uuid(),
-    sizes: z.coerce.string().transform(val=> val.split(",")),
+    // Tallas con su stock, enviadas como JSON: [{"size":"38","stock":4}, ...]
+    variants: z.string().transform((val, ctx) => {
+        try { return JSON.parse(val); }
+        catch { ctx.addIssue({ code: "custom", message: "Variantes inválidas" }); return z.NEVER; }
+    }).pipe(z.array(z.object({
+        size: z.string().trim().min(1).max(20),
+        stock: z.coerce.number().int().min(0),
+    })).min(1, "Debe tener al menos una talla")
+      .refine(v => new Set(v.map(x => x.size)).size === v.length, "Tallas repetidas")),
     tags: z.string(),
     gender: z.nativeEnum(Gender)
 
@@ -32,7 +39,7 @@ export const createUpdateProduct = async (formData: FormData) => {
 
     const products = productParsed.data;
     products.slug = products.slug.toLowerCase().replace(/ /g, "-").trim();
-    const {id, ...rest} = products;
+    const {id, variants, ...rest} = products;
     try{
         let product : Product;
          const prismaTx = await prisma.$transaction( async (tx)=>{
@@ -46,9 +53,7 @@ export const createUpdateProduct = async (formData: FormData) => {
                 },
                 data:{
                     ...rest,
-                    sizes:{
-                        set: rest.sizes as Size[]
-                    }, tags: tagsArray
+                    tags: tagsArray
                 }
             })
             if(oldProduct && oldProduct.slug !== product.slug){
@@ -61,15 +66,23 @@ export const createUpdateProduct = async (formData: FormData) => {
             product= await tx.product.create({
                 data:{
                     ...rest,
-                    sizes: {
-                        set: rest.sizes as Size[]
-                    },
                     tags: {
                         set: tagsArray
                     }
                 }
             })
         }
+       // Guardar tallas y stock: actualizar/crear las enviadas y borrar las que se quitaron
+       await tx.productVariant.deleteMany({
+           where: { productId: product.id, size: { notIn: variants.map(v => v.size) } },
+       });
+       for (const variant of variants) {
+           await tx.productVariant.upsert({
+               where: { productId_size: { productId: product.id, size: variant.size } },
+               create: { productId: product.id, size: variant.size, stock: variant.stock },
+               update: { stock: variant.stock },
+           });
+       }
        //TODO: proceso de carga y guardado de imagenes
        //Recorrer las imagenes y guardarlas
        if(formData.getAll("images")){

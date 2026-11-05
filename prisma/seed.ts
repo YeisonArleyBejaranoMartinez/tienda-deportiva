@@ -12,12 +12,7 @@ const prisma = new PrismaClient({
   adapter,
 });
 
-const CategoryData: Prisma.CategoryCreateInput[] = [
-  "shirts",
-  "pants",
-  "hoodies",
-  "hats",
-].map((name) => ({
+const CategoryData: Prisma.CategoryCreateInput[] = initialData.categories.map((name) => ({
   name,
 }));
 
@@ -28,6 +23,7 @@ export async function main() {
   await prisma.order.deleteMany();
 
   await prisma.productImage.deleteMany();
+  await prisma.productVariant.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
   await prisma.user.deleteMany();
@@ -61,9 +57,10 @@ export async function main() {
       create: {
         title: product.title,
         description: product.description,
-        inStock: product.inStock, // ojo con el nombre exacto del campo en tu modelo
         price: product.price,
-        sizes: product.sizes,
+        variants: {
+          create: product.variants,
+        },
         slug: product.slug,
         tags: product.tags,
         gender: product.gender,

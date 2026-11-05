@@ -29,7 +29,6 @@ export const placeOrder = async (productIds: productsToOrder[],  address: Addres
     // console.log("products", products);
     //calcular los montos // Encabezado
     const itemsInOrder = productIds.reduce((count, p)=> count + p.quantity, 0);
-    // console.log(itemsInOrder);
     //los totales de tax, subtotal, total.
     const {subTotal, tax, total } = productIds.reduce((totals, item)=>{
         const productQuantity = item.quantity;
@@ -37,7 +36,7 @@ export const placeOrder = async (productIds: productsToOrder[],  address: Addres
         if(!product)  throw new Error(`${item.productId} no se pudo encontrar el producto-500`);
         const subTotal = product.price * productQuantity;
         totals.subTotal+= subTotal;
-        totals.tax = subTotal * 0.15;
+        totals.tax += subTotal * 0.15;
         totals.total += subTotal * 1.15;
 
         return totals;
@@ -48,32 +47,27 @@ export const placeOrder = async (productIds: productsToOrder[],  address: Addres
 //crear la transaccion de base de datos
 try{
     const prismaTx = await prisma.$transaction(async (tx) => {
-    //1. actualizar el stock de los productos
+    //1. descontar el stock de cada talla (variante)
+    for (const item of productIds) {
+        if (item.quantity <= 0) {
+            throw new Error(`${item.slug} no tiene cantidad definida`);
+        }
+        const product = products.find((p) => p.slug === item.slug);
+        if (!product) throw new Error(`${item.slug} no se pudo encontrar el producto`);
 
-    const updatedProductsPromises = products.map((product) => {
-        // actualizar los valores
-        const productQuantity = productIds
-        .filter((p) => p.productId === product.id)
-        .reduce((acc, item) => item.quantity + acc, 0);
-        if (productQuantity === 0) {
-        throw new Error(`${product.id} no tiene cantidad definida`);
-        }
-        return tx.product.update({
-        where: { id: product.id },
-        data: {
-            inStock: {
-            decrement: productQuantity,
+        // Solo descuenta si hay stock suficiente (evita stock negativo)
+        const { count } = await tx.productVariant.updateMany({
+            where: {
+                productId: product.id,
+                size: item.size,
+                stock: { gte: item.quantity },
             },
-        },
+            data: { stock: { decrement: item.quantity } },
         });
-    });
-    const updateProducts = await Promise.all(updatedProductsPromises);
-    //verificar  valores negativos en la existencia  = no hay stock
-    updateProducts.forEach((product) => {
-        if (product.inStock < 0) {
-        throw new Error(`${product.slug} no tiene  invemtario suficiente`);
+        if (count === 0) {
+            throw new Error(`${product.title} talla ${item.size} no tiene inventario suficiente`);
         }
-    });
+    }
     //2. crear el encabezado de la order
     const order = await tx.order.create({
         data: {
@@ -90,7 +84,7 @@ try{
                 size: p.size,
                 productId: p.productId,
                 price:
-                products.find((product) => product.slug === product.slug)
+                products.find((product) => product.slug === p.slug)
                     ?.price ?? 0,
             })),
             },
@@ -108,7 +102,6 @@ try{
         },
     });
     return {
-        updatedProducts: updateProducts,
         ordern: order,
         orderAddres: orderAddress,
     };

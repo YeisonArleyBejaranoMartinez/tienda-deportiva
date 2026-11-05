@@ -1,4 +1,5 @@
 export const revalidate = 604800;
+import { currencyFormat } from "@/src/app/utils";
 import { ProductSlideShow } from "@/src/components";
 import { titleFont } from "@/src/confic/fonts";
 import { notFound } from "next/navigation";
@@ -15,33 +16,24 @@ type PropsMetadata = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import {AddToCart} from "./ui/AddToCart"
 
 
 
 export async function generateMetadata(
   { params }: PropsMetadata,
-  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { slug } = await params;
-  // fetch post information
-  const post = await fetch(`https://api.vercel.app/blog/${slug}`).then((res) =>
-    res.json(),
-  );
+  const product = await getProductBySlug(slug);
 
   return {
-    title: post.title,
-    description: post.description,
+    title: product?.title ?? "Producto no encontrado",
+    description: product?.description ?? "",
     openGraph: {
-      title: post.title,
-      description: post.description,
-      //images : [], // https: // misitioweb.com/products/imagen_1.png
-      images: [
-        {
-          url: post.image,
-        }
-      ],
+      title: product?.title ?? "Producto no encontrado",
+      description: product?.description ?? "",
+      images: product?.images[0] ? [{ url: product.images[0] }] : [],
     },
   };
 }
@@ -75,7 +67,7 @@ export default async function Produc({ params }: Props) {
         <h1 className={`${titleFont.className} antialiased text-px font-bold`}>
           {product.title}
         </h1>
-        <p className="text-log mb-5">${product.price}</p>
+        <p className="text-log mb-5">{currencyFormat(product.price)}</p>
         <AddToCart product={product}/>
         {/*descripcion */}
         <h3 className="font-bold text-sm">Descripción</h3>

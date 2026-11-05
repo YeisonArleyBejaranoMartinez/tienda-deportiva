@@ -1,5 +1,6 @@
 import { Gender } from "@/src/generated/enums";
 import prisma from "@/src/lib/prisma";
+import { sortVariants } from "@/src/app/utils/sortVariants";
 
 interface PaginationOptions {
   page?: number;
@@ -25,6 +26,9 @@ export const getPaginatedProductsWithImages = async ({
             url: true,
           },
         },
+        variants: {
+          select: { size: true, stock: true },
+        },
       },
       where: {
         gender: gender,
@@ -40,6 +44,7 @@ export const getPaginatedProductsWithImages = async ({
       products: products.map((product) => ({
         ...product,
         images: product.ProductImage.map((image) => image.url),
+        variants: sortVariants(product.variants),
       })),
     };
   } catch (error) {
