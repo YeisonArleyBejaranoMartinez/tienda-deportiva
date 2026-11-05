@@ -1,4 +1,5 @@
 "use client"
+import { currencyFormat } from "@/src/app/utils";
 import { ProductImage, QuantitySelector } from '@/src/components'
 import { useCartStore } from '@/src/store'
 import Image from 'next/image'
@@ -23,7 +24,7 @@ const ProductsInCart = () => {
             <Link href={`/product/${product.slug}`}>
               {product.size}-{product.title}
             </Link>
-            <p className="text-xl">${product.price}</p>
+            <p className="text-xl">{currencyFormat(product.price)}</p>
             <QuantitySelector
               quantity={product.quantity}
               onQuantityChanged={(quantity) =>

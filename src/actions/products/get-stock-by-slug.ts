@@ -1,17 +1,14 @@
 "use server";
 import prisma from "@/src/lib/prisma";
-// import { sleep } from '@/src/app/utils';
 
+// Stock total del producto (suma de todas sus tallas)
 export const getStockBySlug = async (slug: string): Promise<number> => {
   try {
-    // await sleep(10);
-
-    const stock = await prisma.product.findFirst({
-      where: { slug },
-      select: { inStock: true },
+    const { _sum } = await prisma.productVariant.aggregate({
+      where: { product: { slug } },
+      _sum: { stock: true },
     });
-
-    return stock?.inStock ?? 0;
+    return _sum.stock ?? 0;
   } catch (error) {
     console.log(error);
     return 0;

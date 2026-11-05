@@ -96,10 +96,10 @@ export default async function ProductsPage({searchParams}:Props) {
                   {product.gender}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {product.inStock}
+                  {product.variants.reduce((total, v) => total + v.stock, 0)}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {product.sizes.join(", ")}
+                  {product.variants.map((v) => `${v.size} (${v.stock})`).join(", ")}
                 </td>
               </tr>
             ))}
