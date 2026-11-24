@@ -1,7 +1,7 @@
 "use server";
 import {auth} from "@/src/auth.config";
 import prisma from "@/src/lib/prisma";
-export const getOrderById = async(id )=>{
+export const getOrderById = async (id: string) => {
     const session = await auth();
     if(!session){
         return{
@@ -35,7 +35,7 @@ export const getOrderById = async(id )=>{
           },
         });
         if(!order) throw `${id} no existe`;
-        if(session.user.id ==="user"){
+        if(session.user.role === "user"){
             if(session.user.id !== order.userId){
                 throw `${id} no es de este usuario`;
             }
