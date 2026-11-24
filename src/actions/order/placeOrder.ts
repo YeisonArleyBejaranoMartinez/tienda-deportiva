@@ -37,7 +37,7 @@ export const placeOrder = async (productIds: productsToOrder[],  address: Addres
         if(!product)  throw new Error(`${item.productId} no se pudo encontrar el producto-500`);
         const subTotal = product.price * productQuantity;
         totals.subTotal+= subTotal;
-        totals.tax = subTotal * 0.15;
+        totals.tax += subTotal * 0.15;
         totals.total += subTotal * 1.15;
 
         return totals;
@@ -90,7 +90,7 @@ try{
                 size: p.size,
                 productId: p.productId,
                 price:
-                products.find((product) => product.slug === product.slug)
+                products.find((product) => product.id === p.productId)
                     ?.price ?? 0,
             })),
             },
