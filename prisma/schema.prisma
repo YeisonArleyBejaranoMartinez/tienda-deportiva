@@ -30,20 +30,23 @@ model Category{
   Product Product[]
 }
 model Product{
-  id           String          @unique @default(uuid())
-  title        String
-  description  String
-  price        Float           @default(0)
-  slug         String          @unique
-  tags         String[]        @default([])
-  gender       Gender
-  category     Category       @relation(fields: [categoryId], references: [id])
-  categoryId   String
-  ProductImage ProductImage[]
-  variants     ProductVariant[]
-  OrderItem    OrderItem[]
+  id            String          @unique @default(uuid())
+  title         String
+  description   String
+  price         Float           @default(0)
+  originalPrice Float?
+  featured      Boolean         @default(false)
+  slug          String          @unique
+  tags          String[]        @default([])
+  gender        Gender
+  category      Category       @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  ProductImage  ProductImage[]
+  variants      ProductVariant[]
+  OrderItem     OrderItem[]
 
   @@index([gender])
+  @@index([featured])
 }
 // Variante de un producto (talla) con su propio stock.
 // La talla es texto libre: "38", "40", "S", "M", "Única", "54mm"...

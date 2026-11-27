@@ -6,14 +6,22 @@ interface PaginationOptions {
   page?: number;
   take?: number;
   gender?: Gender;
+  categoryName?: string;
 }
 export const getPaginatedProductsWithImages = async ({
   page = 1,
   take = 12,
   gender,
+  categoryName,
 }: PaginationOptions) => {
   if (isNaN(Number(page))) page = 1;
   if (page < 1) page = 1;
+
+  const where = {
+    ...(gender && { gender }),
+    ...(categoryName && { category: { name: categoryName } }),
+  };
+
   try {
     //1. obtener los  productos con sus imagenes
     const products = await prisma.product.findMany({
@@ -30,14 +38,10 @@ export const getPaginatedProductsWithImages = async ({
           select: { size: true, stock: true },
         },
       },
-      where: {
-        gender: gender,
-      },
+      where,
     });
-    //2. Obtner el total de paginas
-    const totalCount = await prisma.product.count({
-      where: { gender: gender },
-    });
+    //2. Obtener el total de paginas
+    const totalCount = await prisma.product.count({ where });
     return {
       currentPage: page,
       totalPages: Math.ceil(totalCount / take),

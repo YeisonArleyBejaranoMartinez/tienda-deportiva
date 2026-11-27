@@ -59,18 +59,21 @@ export async function main() {
         title: product.title,
         description: product.description,
         price: product.price,
+        originalPrice: product.originalPrice ?? null,
+        featured: product.featured ?? false,
         variants: {
           create: product.variants,
         },
         slug: product.slug,
         tags: product.tags,
         gender: product.gender,
-        categoryId: category.id, // relación por FK
+        categoryId: category.id,
       },
       update: {
-        // aunque no quieras cambiar nada, Prisma exige un objeto aquí
-        // puedes repetir algún campo con el mismo valor
         title: product.title,
+        price: product.price,
+        originalPrice: product.originalPrice ?? null,
+        featured: product.featured ?? false,
       },
     });
     //images

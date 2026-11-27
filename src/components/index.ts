@@ -1,4 +1,5 @@
 export * from "./ui/top-menu/TopMenu";
+export * from "./ui/top-bar/TopBar";
 export * from "./ui/not-found/PageNotFound";
 export * from "./ui/title/Title";
 export * from "./products/product-grid/ProductGrid";
@@ -11,4 +12,9 @@ export * from "./product/product-image/product-image";
 export * from "./product/slide-show/ProductMovileSlideShow";
 export * from "./ui/footer/Footer";
 export * from "./ui/pagination/Pagination";
-export * from  "./providers/Providers";
+export * from  "./providers/Providers"
+export * from "./products/featured-products/FeaturedProducts"
+export * from "./motion/GsapRevealTitle"
+export * from "./motion/GsapStaggerGrid"
+export * from "./motion/GsapPageReveal"
+export * from "./products/product-grid/AnimatedProductGrid";

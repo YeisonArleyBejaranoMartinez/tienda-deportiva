@@ -3,12 +3,14 @@ export interface Product {
   description: string;
   images: string[];
   price: number;
+  originalPrice?: number | null;
+  featured?: boolean;
   variants: ProductVariant[];
   slug: string;
   tags: string[];
   title: string;
-  //TODO: type: Type;
   gender: TypeGender;
+  category?: string; // nombre de la categoría: "patines", "patinetas", etc.
 }
 export interface  CartProduct {
   id: string;

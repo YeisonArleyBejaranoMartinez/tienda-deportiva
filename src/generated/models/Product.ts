@@ -28,10 +28,12 @@ export type AggregateProduct = {
 
 export type ProductAvgAggregateOutputType = {
   price: number | null
+  originalPrice: number | null
 }
 
 export type ProductSumAggregateOutputType = {
   price: number | null
+  originalPrice: number | null
 }
 
 export type ProductMinAggregateOutputType = {
@@ -39,6 +41,8 @@ export type ProductMinAggregateOutputType = {
   title: string | null
   description: string | null
   price: number | null
+  originalPrice: number | null
+  featured: boolean | null
   slug: string | null
   gender: $Enums.Gender | null
   categoryId: string | null
@@ -49,6 +53,8 @@ export type ProductMaxAggregateOutputType = {
   title: string | null
   description: string | null
   price: number | null
+  originalPrice: number | null
+  featured: boolean | null
   slug: string | null
   gender: $Enums.Gender | null
   categoryId: string | null
@@ -59,6 +65,8 @@ export type ProductCountAggregateOutputType = {
   title: number
   description: number
   price: number
+  originalPrice: number
+  featured: number
   slug: number
   tags: number
   gender: number
@@ -69,10 +77,12 @@ export type ProductCountAggregateOutputType = {
 
 export type ProductAvgAggregateInputType = {
   price?: true
+  originalPrice?: true
 }
 
 export type ProductSumAggregateInputType = {
   price?: true
+  originalPrice?: true
 }
 
 export type ProductMinAggregateInputType = {
@@ -80,6 +90,8 @@ export type ProductMinAggregateInputType = {
   title?: true
   description?: true
   price?: true
+  originalPrice?: true
+  featured?: true
   slug?: true
   gender?: true
   categoryId?: true
@@ -90,6 +102,8 @@ export type ProductMaxAggregateInputType = {
   title?: true
   description?: true
   price?: true
+  originalPrice?: true
+  featured?: true
   slug?: true
   gender?: true
   categoryId?: true
@@ -100,6 +114,8 @@ export type ProductCountAggregateInputType = {
   title?: true
   description?: true
   price?: true
+  originalPrice?: true
+  featured?: true
   slug?: true
   tags?: true
   gender?: true
@@ -198,6 +214,8 @@ export type ProductGroupByOutputType = {
   title: string
   description: string
   price: number
+  originalPrice: number | null
+  featured: boolean
   slug: string
   tags: string[]
   gender: $Enums.Gender
@@ -232,6 +250,8 @@ export type ProductWhereInput = {
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.FloatFilter<"Product"> | number
+  originalPrice?: Prisma.FloatNullableFilter<"Product"> | number | null
+  featured?: Prisma.BoolFilter<"Product"> | boolean
   slug?: Prisma.StringFilter<"Product"> | string
   tags?: Prisma.StringNullableListFilter<"Product">
   gender?: Prisma.EnumGenderFilter<"Product"> | $Enums.Gender
@@ -247,6 +267,8 @@ export type ProductOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  originalPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  featured?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -266,6 +288,8 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.FloatFilter<"Product"> | number
+  originalPrice?: Prisma.FloatNullableFilter<"Product"> | number | null
+  featured?: Prisma.BoolFilter<"Product"> | boolean
   tags?: Prisma.StringNullableListFilter<"Product">
   gender?: Prisma.EnumGenderFilter<"Product"> | $Enums.Gender
   categoryId?: Prisma.StringFilter<"Product"> | string
@@ -280,6 +304,8 @@ export type ProductOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  originalPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  featured?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -299,6 +325,8 @@ export type ProductScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
   price?: Prisma.FloatWithAggregatesFilter<"Product"> | number
+  originalPrice?: Prisma.FloatNullableWithAggregatesFilter<"Product"> | number | null
+  featured?: Prisma.BoolWithAggregatesFilter<"Product"> | boolean
   slug?: Prisma.StringWithAggregatesFilter<"Product"> | string
   tags?: Prisma.StringNullableListFilter<"Product">
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Product"> | $Enums.Gender
@@ -310,6 +338,8 @@ export type ProductCreateInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -324,6 +354,8 @@ export type ProductUncheckedCreateInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -338,6 +370,8 @@ export type ProductUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -352,6 +386,8 @@ export type ProductUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -366,6 +402,8 @@ export type ProductCreateManyInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -377,6 +415,8 @@ export type ProductUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -387,6 +427,8 @@ export type ProductUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -416,6 +458,8 @@ export type ProductCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  originalPrice?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -424,6 +468,7 @@ export type ProductCountOrderByAggregateInput = {
 
 export type ProductAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
+  originalPrice?: Prisma.SortOrder
 }
 
 export type ProductMaxOrderByAggregateInput = {
@@ -431,6 +476,8 @@ export type ProductMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  originalPrice?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -441,6 +488,8 @@ export type ProductMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  originalPrice?: Prisma.SortOrder
+  featured?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
@@ -448,6 +497,7 @@ export type ProductMinOrderByAggregateInput = {
 
 export type ProductSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
+  originalPrice?: Prisma.SortOrder
 }
 
 export type ProductScalarRelationFilter = {
@@ -509,6 +559,18 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type ProductUpdatetagsInput = {
   set?: string[]
   push?: string | string[]
@@ -565,6 +627,8 @@ export type ProductCreateWithoutCategoryInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -578,6 +642,8 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -620,6 +686,8 @@ export type ProductScalarWhereInput = {
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.FloatFilter<"Product"> | number
+  originalPrice?: Prisma.FloatNullableFilter<"Product"> | number | null
+  featured?: Prisma.BoolFilter<"Product"> | boolean
   slug?: Prisma.StringFilter<"Product"> | string
   tags?: Prisma.StringNullableListFilter<"Product">
   gender?: Prisma.EnumGenderFilter<"Product"> | $Enums.Gender
@@ -631,6 +699,8 @@ export type ProductCreateWithoutVariantsInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -644,6 +714,8 @@ export type ProductUncheckedCreateWithoutVariantsInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -673,6 +745,8 @@ export type ProductUpdateWithoutVariantsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -686,6 +760,8 @@ export type ProductUncheckedUpdateWithoutVariantsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -699,6 +775,8 @@ export type ProductCreateWithoutProductImageInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -712,6 +790,8 @@ export type ProductUncheckedCreateWithoutProductImageInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -741,6 +821,8 @@ export type ProductUpdateWithoutProductImageInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -754,6 +836,8 @@ export type ProductUncheckedUpdateWithoutProductImageInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -767,6 +851,8 @@ export type ProductCreateWithoutOrderItemInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -780,6 +866,8 @@ export type ProductUncheckedCreateWithoutOrderItemInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -809,6 +897,8 @@ export type ProductUpdateWithoutOrderItemInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -822,6 +912,8 @@ export type ProductUncheckedUpdateWithoutOrderItemInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -835,6 +927,8 @@ export type ProductCreateManyCategoryInput = {
   title: string
   description: string
   price?: number
+  originalPrice?: number | null
+  featured?: boolean
   slug: string
   tags?: Prisma.ProductCreatetagsInput | string[]
   gender: $Enums.Gender
@@ -845,6 +939,8 @@ export type ProductUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -858,6 +954,8 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -871,6 +969,8 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.FloatFieldUpdateOperationsInput | number
+  originalPrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  featured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.ProductUpdatetagsInput | string[]
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
@@ -930,6 +1030,8 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   title?: boolean
   description?: boolean
   price?: boolean
+  originalPrice?: boolean
+  featured?: boolean
   slug?: boolean
   tags?: boolean
   gender?: boolean
@@ -946,6 +1048,8 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   title?: boolean
   description?: boolean
   price?: boolean
+  originalPrice?: boolean
+  featured?: boolean
   slug?: boolean
   tags?: boolean
   gender?: boolean
@@ -958,6 +1062,8 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   title?: boolean
   description?: boolean
   price?: boolean
+  originalPrice?: boolean
+  featured?: boolean
   slug?: boolean
   tags?: boolean
   gender?: boolean
@@ -970,13 +1076,15 @@ export type ProductSelectScalar = {
   title?: boolean
   description?: boolean
   price?: boolean
+  originalPrice?: boolean
+  featured?: boolean
   slug?: boolean
   tags?: boolean
   gender?: boolean
   categoryId?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "slug" | "tags" | "gender" | "categoryId", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "originalPrice" | "featured" | "slug" | "tags" | "gender" | "categoryId", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   ProductImage?: boolean | Prisma.Product$ProductImageArgs<ExtArgs>
@@ -1004,6 +1112,8 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     title: string
     description: string
     price: number
+    originalPrice: number | null
+    featured: boolean
     slug: string
     tags: string[]
     gender: $Enums.Gender
@@ -1439,6 +1549,8 @@ export interface ProductFieldRefs {
   readonly title: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>
   readonly price: Prisma.FieldRef<"Product", 'Float'>
+  readonly originalPrice: Prisma.FieldRef<"Product", 'Float'>
+  readonly featured: Prisma.FieldRef<"Product", 'Boolean'>
   readonly slug: Prisma.FieldRef<"Product", 'String'>
   readonly tags: Prisma.FieldRef<"Product", 'String[]'>
   readonly gender: Prisma.FieldRef<"Product", 'Gender'>

@@ -7,7 +7,9 @@ interface SeedVariant {
 interface SeedProduct {
   description: string;
   images: string[];
-  price: number; // COP
+  price: number; // COP — precio actual (con descuento si aplica)
+  originalPrice?: number; // COP — precio antes del descuento
+  featured?: boolean;
   variants: SeedVariant[];
   slug: string;
   tags: string[];
@@ -30,9 +32,15 @@ interface SeedData {
   users: SeedUser[]
 }
 
-// Genera tallas numéricas con el mismo stock (ej. 35 a 42)
-const tallas = (desde: number, hasta: number, stock: number): SeedVariant[] =>
-  Array.from({ length: hasta - desde + 1 }, (_, i) => ({ size: String(desde + i), stock }));
+// Genera tallas en pares para patines (ej. 36-37, 38-39, 40-41…)
+// Los patines en línea y quad cubren dos tallas porque la bota es extensible.
+const tallasPares = (desde: number, hasta: number, stock: number): SeedVariant[] => {
+  const pares: SeedVariant[] = [];
+  for (let i = desde; i <= hasta; i += 2) {
+    pares.push({ size: `${i}-${i + 1}`, stock });
+  }
+  return pares;
+};
 
 // Datos de prueba. Reemplazar por el inventario real del aliado.
 export const initialData: SeedData = {
@@ -44,8 +52,10 @@ export const initialData: SeedData = {
       slug: "patines_en_linea_freeskate_pro",
       description: "Patín en línea para freeskate urbano con bota semirrígida, chasis de aluminio de 243 mm, ruedas de 80 mm 85A y rodamientos ABEC-9.",
       images: [],
-      price: 689000,
-      variants: [...tallas(36, 44, 3)],
+      price: 551200,
+      originalPrice: 689000,
+      featured: true,
+      variants: [...tallasPares(36, 44, 3)],
       type: "patines",
       tags: ["patines", "en linea", "freeskate"],
       gender: "unisex",
@@ -56,7 +66,8 @@ export const initialData: SeedData = {
       description: "Bota de fibra de carbono termomoldeable, chasis de 4 ruedas de 100 mm. Ideal para patinaje de carreras y entrenamiento.",
       images: [],
       price: 1250000,
-      variants: [...tallas(35, 43, 2)],
+      featured: true,
+      variants: [...tallasPares(35, 43, 2)],
       type: "patines",
       tags: ["patines", "velocidad", "carreras"],
       gender: "unisex",
@@ -82,7 +93,7 @@ export const initialData: SeedData = {
       description: "Patín de 4 ruedas tipo bota con freno delantero, ruedas de 58 mm y diseño retro.",
       images: [],
       price: 349000,
-      variants: [...tallas(35, 41, 2)],
+      variants: [...tallasPares(35, 41, 2)],
       type: "patines",
       tags: ["patines", "quad", "retro"],
       gender: "women",
@@ -93,7 +104,9 @@ export const initialData: SeedData = {
       slug: "patineta_completa_street_8",
       description: "Tabla de arce canadiense de 7 capas de 8.0\", trucks de aluminio, ruedas de 52 mm 99A y rodamientos ABEC-7.",
       images: [],
-      price: 329000,
+      price: 263200,
+      originalPrice: 329000,
+      featured: true,
       variants: [{ size: "8.0", stock: 5 }, { size: "8.25", stock: 3 }],
       type: "patinetas",
       tags: ["patineta", "skateboard", "street"],
@@ -127,7 +140,9 @@ export const initialData: SeedData = {
       slug: "casco_certificado_urban",
       description: "Casco de ABS con interior de EPS, ventilación y ajuste por rueda trasera. Para patín, patineta y bicicleta.",
       images: [],
-      price: 149000,
+      price: 119200,
+      originalPrice: 149000,
+      featured: true,
       variants: [{ size: "S", stock: 4 }, { size: "M", stock: 6 }, { size: "L", stock: 3 }],
       type: "protecciones",
       tags: ["casco", "proteccion"],
@@ -161,7 +176,9 @@ export const initialData: SeedData = {
       slug: "ruedas_patin_en_linea_x4",
       description: "Juego de 4 ruedas de poliuretano 85A para patín en línea.",
       images: [],
-      price: 99000,
+      price: 79200,
+      originalPrice: 99000,
+      featured: true,
       variants: [{ size: "72mm", stock: 8 }, { size: "76mm", stock: 6 }, { size: "80mm", stock: 10 }, { size: "90mm", stock: 4 }],
       type: "repuestos",
       tags: ["ruedas", "repuesto", "patines"],
